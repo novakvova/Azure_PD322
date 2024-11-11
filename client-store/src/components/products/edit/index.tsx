@@ -70,11 +70,12 @@ const ProductEditPage = () => {
                 const newFileList: UploadFile[] = [];
                 for (let i = 0; i < data.images.length; i++) {
                     newFileList.push({
-                        uid: data.images[i],
-                        name: data.images[i],
+                        // uid: data.images[i],
+                        // name: data.images[i],
                         status: "done",
+                        originFileObj: new File([new Blob([''])], data.images[i], { type: 'old-image' }),
                         url: `${API_URL}/images/1200_${data.images[i]}`,
-                    });
+                    } as UploadFile);
                 }
                 setFiles(newFileList);
 
@@ -88,16 +89,19 @@ const ProductEditPage = () => {
     const onSubmit = async (values: IProductEdit) => {
 
         try {
+            console.log("files", files);
+            console.log("values", values);
             const updatedProduct: IProductEdit = {
                 price: values.price,
                 name: values.name,
                 categoryId: values.categoryId,
-                newImages: files
-                    .filter(file => file.originFileObj)
+                images: files
+                    //.filter(file => file.originFileObj)
                     .map(file => file.originFileObj as RcFile),
-                removeImages: removeFiles,
+                //removeImages: removeFiles,
                 id: Number(id),
             };
+            console.log("upload product", updatedProduct);
 
             console.log("Send model", updatedProduct);
             const resp = await http_common.put<IProductEdit>(`/api/products`,
@@ -105,8 +109,8 @@ const ProductEditPage = () => {
                     headers: {"Content-Type": "multipart/form-data"}
                 });
 
-            console.log("Product updated: ", resp.data);
-            navigate('/');
+             console.log("Product updated: ", resp.data);
+            navigate('/products');
         } catch (error) {
             console.error("Error updating product: ", error);
         }
