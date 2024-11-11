@@ -24,10 +24,10 @@ const ProductEditPage = () => {
 
     //Весь код, який робить переміщення
     const sensor = useSensor(PointerSensor, {
-        activationConstraint: { distance: 10 },
+        activationConstraint: {distance: 10},
     });
 
-    const onDragEnd = ({ active, over }: DragEndEvent) => {
+    const onDragEnd = ({active, over}: DragEndEvent) => {
         if (active.id !== over?.id) {
             setFiles((prev) => {
                 const activeIndex = prev.findIndex((i) => i.uid === active.id);
@@ -37,14 +37,14 @@ const ProductEditPage = () => {
         }
     };
 
-    const handleChangeFiles: UploadProps["onChange"] = ({ fileList: newFileList }) => {
+    const handleChangeFiles: UploadProps["onChange"] = ({fileList: newFileList}) => {
         setFiles(newFileList);
     };
 
     const uploadButton = (
-        <button style={{ border: 0, background: "none" }} type="button">
-            <PlusOutlined />
-            <div style={{ marginTop: 8 }}>Upload</div>
+        <button style={{border: 0, background: "none"}} type="button">
+            <PlusOutlined/>
+            <div style={{marginTop: 8}}>Upload</div>
         </button>
     );
 
@@ -88,12 +88,12 @@ const ProductEditPage = () => {
     const onSubmit = async (values: IProductEdit) => {
 
         try {
-            const updatedProduct : IProductEdit = {
+            const updatedProduct: IProductEdit = {
                 price: values.price,
                 name: values.name,
                 categoryId: values.categoryId,
                 newImages: files
-                    .filter(file=> file.originFileObj)
+                    .filter(file => file.originFileObj)
                     .map(file => file.originFileObj as RcFile),
                 removeImages: removeFiles,
                 id: Number(id),
@@ -102,8 +102,8 @@ const ProductEditPage = () => {
             console.log("Send model", updatedProduct);
             const resp = await http_common.put<IProductEdit>(`/api/products`,
                 updatedProduct, {
-                headers: { "Content-Type": "multipart/form-data" }
-            });
+                    headers: {"Content-Type": "multipart/form-data"}
+                });
 
             console.log("Product updated: ", resp.data);
             navigate('/');
@@ -117,13 +117,13 @@ const ProductEditPage = () => {
         value: item.id
     }));
 
-    const handleRemove = (file: UploadFile) => {
-        if (file.name && !file.originFileObj) {
-            setRemoveFiles(prev => [...prev, file.name]);
-        }
-        console.log("Remove file", file);
-        return true;
-    };
+    // const handleRemove = (file: UploadFile) => {
+    //     if (file.name && !file.originFileObj) {
+    //         setRemoveFiles(prev => [...prev, file.name]);
+    //     }
+    //     console.log("Remove file", file);
+    //     return true;
+    // };
 
     //console.log("Categories", categories);
     return (
@@ -153,16 +153,24 @@ const ProductEditPage = () => {
                             strategy={horizontalListSortingStrategy}
                         >
                             <Upload
-                                showUploadList={{ showPreviewIcon: false }}
+                                // showUploadList={{ showPreviewIcon: false }}
                                 beforeUpload={() => false}
                                 accept="image/*"
                                 listType="picture-card"
+                                multiple
                                 fileList={files}
                                 onChange={handleChangeFiles}
                                 itemRender={(originNode, file) => (
-                                    <DraggableUploadListItem originNode={originNode} file={file} />
+                                    <DraggableUploadListItem originNode={originNode} file={file}/>
                                 )}
-                            >
+                                onPreview={(file: UploadFile) => {
+                                    if (!file.url && !file.preview) {
+                                        file.preview = URL.createObjectURL(file.originFileObj as RcFile);
+                                    }
+                                    setPreviewImage(file.url || (file.preview as string));
+                                    setPreviewOpen(true);
+                                    setPreviewTitle(file.name || file.url!.substring(file.url!.lastIndexOf('/') + 1));
+                                }}>
                                 {files.length >= 8 ? null : uploadButton}
                             </Upload>
                         </SortableContext>
