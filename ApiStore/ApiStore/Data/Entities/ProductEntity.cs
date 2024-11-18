@@ -14,5 +14,6 @@ namespace ApiStore.Data.Entities
         public int CategoryId { get; set; }
         public CategoryEntity? Category { get; set; }
         public virtual ICollection<ProductImageEntity>? ProductImages { get; set; }
+        public virtual ICollection<ProductDescImageEntity>? ProductDescImages { get; set; }
     }
 }

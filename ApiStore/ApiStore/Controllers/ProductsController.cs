@@ -123,5 +123,24 @@ namespace ApiStore.Controllers
 
             return Ok();
         }
+
+
+        [HttpPost("upload")]
+        public async Task<IActionResult> UploadDescImage([FromForm] ProductDescImageUploadViewModel model)
+        {
+            if (model.Image != null)
+            {
+                var pdi = new ProductDescImageEntity
+                {
+                    Image = await imageHulk.Save(model.Image),
+                    DateCreate = DateTime.Now,
+
+                };
+                context.ProductDescImages.Add(pdi);
+                await context.SaveChangesAsync();
+                return Ok(pdi.Image);
+            }
+            return BadRequest();
+        }
     }
 }

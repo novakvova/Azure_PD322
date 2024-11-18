@@ -2,7 +2,7 @@ import {useState, useEffect} from "react";
 import {useNavigate, useParams, Link} from "react-router-dom";
 import {http_common, API_URL} from '../../../env';
 import {Button, Form, Modal, Input, Upload, UploadFile, Space, InputNumber, Select, UploadProps} from "antd";
-import {RcFile, UploadChangeParam} from "antd/es/upload";
+import {RcFile} from "antd/es/upload";
 import {PlusOutlined} from '@ant-design/icons';
 import {IProductEdit, IProductItem} from "../../../interfaces/products";
 import {ICategoryName} from '../../../interfaces/categories';
@@ -14,7 +14,6 @@ const ProductEditPage = () => {
     const {id} = useParams();
     const navigate = useNavigate();
     const [form] = Form.useForm<IProductEdit>();
-    const [removeFiles, setRemoveFiles] = useState<string[]>([]);
     const [files, setFiles] = useState<UploadFile[]>([]);
 
     const [previewOpen, setPreviewOpen] = useState<boolean>(false);
@@ -121,15 +120,6 @@ const ProductEditPage = () => {
         value: item.id
     }));
 
-    // const handleRemove = (file: UploadFile) => {
-    //     if (file.name && !file.originFileObj) {
-    //         setRemoveFiles(prev => [...prev, file.name]);
-    //     }
-    //     console.log("Remove file", file);
-    //     return true;
-    // };
-
-    //console.log("Categories", categories);
     return (
         <>
             <p className="text-center text-3xl font-bold mb-7">Edit Product</p>
