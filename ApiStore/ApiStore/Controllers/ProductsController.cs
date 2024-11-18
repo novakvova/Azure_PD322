@@ -133,7 +133,7 @@ namespace ApiStore.Controllers
                 var pdi = new ProductDescImageEntity
                 {
                     Image = await imageHulk.Save(model.Image),
-                    DateCreate = DateTime.Now,
+                    DateCreate = DateTime.Now.ToUniversalTime(),
 
                 };
                 context.ProductDescImages.Add(pdi);
