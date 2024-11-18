@@ -6,6 +6,7 @@ import { PlusOutlined } from '@ant-design/icons';
 import { IProductCreate } from '../../../interfaces/products';
 import {http_common} from "../../../env";
 import {ICategoryItem} from "../../home/types.ts";
+import EditorTiny from "../../common/EditorTiny";
 // import Loader from '../../common/loader/Loader';
 
 export interface ICategoryName {
@@ -20,6 +21,8 @@ const ProductCreatePage = () => {
     // const [loading, setLoading] = useState<boolean>(false);
 
     const [categories, setCategories] = useState<ICategoryName[]>([]);
+    const [description, setDescription] = useState<string>("");
+    const [descImages, setDescImages] = useState<string[]>([]);
     const [previewOpen, setPreviewOpen] = useState<boolean>(false);
     const [previewImage, setPreviewImage] = useState('');
     const [previewTitle, setPreviewTitle] = useState('');
@@ -35,20 +38,25 @@ const ProductCreatePage = () => {
         // setLoading(true);
         try {
             console.log("Send Data:", values);
+            console.log("descImages list:", descImages);
 
-            http_common.post("/api/Products", values,
-                {
-                    headers: { "Content-Type": "multipart/form-data" }
-                }).then(resp => {
-                console.log("Product created:", resp.data);
-                navigate(`/products`);
-            });
+            // http_common.post("/api/Products", values,
+            //     {
+            //         headers: { "Content-Type": "multipart/form-data" }
+            //     }).then(resp => {
+            //     console.log("Product created:", resp.data);
+            //     navigate(`/products`);
+            // });
         } catch (error) {
             console.error("Error creating product:", error);
         } finally {
             // setLoading(false);
         }
     };
+
+    const setCallImages = (image: string) => {
+        setDescImages((prevImages) => [...prevImages, image]);
+    }
 
     return (
 
@@ -97,6 +105,23 @@ const ProductCreatePage = () => {
                             </div>
                         </Upload>
                     </Form.Item>
+
+                    {/*<Form.Item name="description" label="Опис" hasFeedback*/}
+                    {/*           rules={[{required: true, message: 'Please provide a valid description name.'}]}>*/}
+                        <EditorTiny
+                            value={description} //Значення, яке ми вводимо в поле
+                            label="Опис" //Підпис для даного інпуту
+                            field="description" //Назва інпуту
+                            getSelectImage={setCallImages}
+                            error={undefined} //Якщо є помилка, то вона буде передаватися
+                            touched={undefined} //Якщо натискалася кнопка Submit
+                            onEditorChange={(text: string) => {
+                                //Метод, який викликає сам компонет, коли в інпуті змінюється значення
+                                //console.log("Data set value", text);
+                                setDescription(text); //Текст, який в середині інпуту, записуємо у формік в поле description
+                            }}
+                        />
+                    {/*</Form.Item>*/}
 
                     <Form.Item wrapperCol={{ span: 10, offset: 10 }}>
                         <Space>
