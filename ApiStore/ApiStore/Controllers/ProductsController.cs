@@ -30,6 +30,13 @@ namespace ApiStore.Controllers
             context.Products.Add(entity);
             context.SaveChanges();
 
+            if (!model.ImagesDescIds.Any())
+            {
+                await context.ProductDescImages
+                    .Where(x => model.ImagesDescIds.Contains(x.Id))
+                    .ForEachAsync(x => x.ProductId = entity.Id);
+            }
+
             if (model.Images != null)
             {
                 var p = 1;
@@ -138,7 +145,7 @@ namespace ApiStore.Controllers
                 };
                 context.ProductDescImages.Add(pdi);
                 await context.SaveChangesAsync();
-                return Ok(pdi.Image);
+                return Ok(mapper.Map<ProductDescImageIdViewModel>(pdi));
             }
             return BadRequest();
         }

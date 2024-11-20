@@ -27,6 +27,8 @@ namespace ApiStore.Mapper
 
             CreateMap<ProductEditViewModel, ProductEntity>()
                 .ForMember(x => x.ProductImages, opt => opt.Ignore());
+
+            CreateMap<ProductDescImageEntity, ProductDescImageIdViewModel>();
         }
     }
 }
