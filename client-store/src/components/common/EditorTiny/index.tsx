@@ -2,23 +2,24 @@ import { Editor, IAllProps } from "@tinymce/tinymce-react";
 import classNames from "classnames";
 import {FC} from "react";
 import {API_URL, http_common} from "../../../env";
+import {IProductImageDesc} from "../../../interfaces/products";
 
 //Властивості, які приймає компонент
 interface IEditorProps extends IAllProps {
     //тут міститься метод onEditorChange - який відслідковує зміни в едіторі
     label: string; //Назва самого інпута
     field: string; //ідентифікатор інпута
-    getSelectImage: (name: string) => void;
-    error?: string | undefined;
-    touched?: boolean | undefined;
+    getSelectImage: (image: IProductImageDesc) => void;
+    // error?: string | undefined;
+    // touched?: boolean | undefined;
 }
 
 const EditorTiny: FC<IEditorProps> = ({
                                           label,
                                           field,
                                           getSelectImage,
-                                          error,
-                                          touched,
+                                          // error,
+                                          // touched,
                                           ...props //Усі інши параметри, наприклад onEditorChange
                                       }) => {
 
@@ -30,8 +31,8 @@ const EditorTiny: FC<IEditorProps> = ({
             <div
                 className={classNames(
                     "form-control",
-                    { "is-invalid border border-4 border-danger": touched && error },
-                    { "is-valid border border-4 border-success": touched && !error }
+                    // { "is-invalid border border-4 border-danger": touched && error },
+                    // { "is-valid border border-4 border-success": touched && !error }
                 )}
             >
                 <Editor
@@ -110,38 +111,21 @@ const EditorTiny: FC<IEditorProps> = ({
                                         alert("Не допустимий тип файлу");
                                         return;
                                     }
-                                    console.log("File select", file);
+                                    // console.log("File select", file);
 
                                     http_common
-                                        .post("api/products/upload", { image: file },
+                                        .post<IProductImageDesc>("api/products/upload", { image: file },
                                             {
                                                 headers: { "Content-Type": "multipart/form-data" }
                                             }) //посилаємо запит на сервер для збереження файлу
-                                        .then((resp: any) => {
-                                            getSelectImage(resp.data);
+                                        .then((resp) => {
+                                            const {data} = resp;
+                                            getSelectImage(data);
                                             //Якщо результат був усешіний
                                             const fileName =
-                                                API_URL + "/images/600_" + resp.data; //Формуємо шлях до файлу із розміром файлу 600
+                                                API_URL + "/images/600_" + data.image; //Формуємо шлях до файлу із розміром файлу 600
                                             cb(fileName); //відображаємо даний шлях у нашому вікні самого editora
                                         });
-                                    //FileReader = дозволяє прочитати файл на клієнті у Base64 - формат
-                                    /*
-                                    const reader = new FileReader();
-                                    reader.readAsDataURL(file); // у FileReader - передаємо наш файл
-                                    reader.onload = function () {
-                                        //Очікуємо події, коли файл завантажиться у Reader
-                                        const base64 = reader.result as string; //Отримуємо base64 даного айлу
-                                        http_common
-                                            .post("api/products/upload", { image: base64 }) //посилаємо запит на сервер для збереження файлу
-                                            .then((resp: any) => {
-                                                //Якщо результат був усешіний
-                                                const fileName =
-                                                    API_URL + "/images/600_" + resp.data.name; //Формуємо шлях до файлу із розміром файлу 600
-                                                cb(fileName); //відображаємо даний шлях у нашому вікні самого editora
-                                            });
-                                    };
-
-                                     */
                                 }
                                 (e.target as HTMLInputElement).value=""
                                 //e.target.value = ""; //скидаємо значення із інпута- щоб він мав пусте значення
@@ -155,7 +139,7 @@ const EditorTiny: FC<IEditorProps> = ({
                     {...props} //до Eдітора додаємо усі властивості в вказіник onEditorChange
                 />
             </div>
-            {touched && error && <div className="invalid-feedback">{error}</div>}
+            {/*{touched && error && <div className="invalid-feedback">{error}</div>}*/}
         </div>
     );
 };

@@ -14,6 +14,11 @@ export interface IProductCreate {
     images: File[]|null,
 }
 
+export interface IProductImageDesc {
+    id: number,
+    image: string,
+}
+
 export interface IProductEdit {
     id: number;
     name: string;

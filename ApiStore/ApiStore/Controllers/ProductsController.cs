@@ -30,7 +30,7 @@ namespace ApiStore.Controllers
             context.Products.Add(entity);
             context.SaveChanges();
 
-            if (!model.ImagesDescIds.Any())
+            if (model.ImagesDescIds.Any())
             {
                 await context.ProductDescImages
                     .Where(x => model.ImagesDescIds.Contains(x.Id))
