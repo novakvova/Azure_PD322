@@ -16,8 +16,8 @@ services:
     networks:
       - myAppNetwork
     volumes:
-#       - d:/web/pd322/postgresql:/var/lib/postgresql/data  # Use the volume name msvol here
-        - /data/postgresql/data:/var/lib/postgresql/data
+       - d:/web/pd322_azure/postgresql:/var/lib/postgresql/data  # Use the volume name msvol here
+#        - /data/postgresql/data:/var/lib/postgresql/data
     deploy:
       restart_policy:
         condition: on-failure
@@ -33,7 +33,8 @@ services:
     depends_on:
       - postgresServerDb
     volumes:
-     - /volumes/pd322-asp/images:/app/images  # Use the volume name appvol here
+     - d:/volumes/pd322-asp/images:/app/images  # Use the volume name appvol here
+#     - /volumes/pd322-asp/images:/app/images  # Use the volume name appvol here
     deploy:
       restart_policy:
         condition: on-failure
