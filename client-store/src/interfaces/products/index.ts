@@ -5,6 +5,7 @@ export interface IProductItem {
     images: string[],
     categoryName: string,
     categoryId: number,
+    description: string,
 }
 
 export interface IProductCreate {

@@ -61,11 +61,16 @@ namespace ApiStore.Controllers
         {
             var product = context.Products
                 .Include(x=>x.ProductImages)
+                .Include(x=>x.ProductDescImages)
                 .SingleOrDefault(x => x.Id == id);
             if (product == null) return NotFound();
 
             if (product.ProductImages != null)
                 foreach (var p in product.ProductImages)
+                    imageHulk.Delete(p.Image);
+
+            if (product.ProductDescImages != null)
+                foreach (var p in product.ProductDescImages)
                     imageHulk.Delete(p.Image);
 
             context.Products.Remove(product);
