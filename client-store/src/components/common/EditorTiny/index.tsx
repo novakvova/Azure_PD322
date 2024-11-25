@@ -40,7 +40,7 @@ const EditorTiny: FC<IEditorProps> = ({
                     // initialValue="<p>This is the initial content of the editor</p>"
                     init={{
                         height: 500, //висота самого інтупа
-                        language: "uk", //мова панелі
+                        language: "en", //мова панелі
                         menubar: true, //показувать меню
                         images_file_types: "jpg,jpeg", //формати файлі, які можна обирать - фото
                         block_unsupported_drop: false,
@@ -85,7 +85,7 @@ const EditorTiny: FC<IEditorProps> = ({
                             "insertdatetime media table paste code help wordcount",
                         ],
                         toolbar:
-                            "undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image | forecolor backcolor",
+                            "undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image | forecolor backcolor ",
                         content_langs: [
                             { title: "English", code: "en" },
                             { title: "Українська", code: "ua" },
