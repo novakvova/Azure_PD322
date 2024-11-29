@@ -23,6 +23,7 @@ namespace ApiStore.Controllers
         [HttpGet]
         public IActionResult GetList()
         {
+            Thread.Sleep(1000);
             var list = context.Categories
                 .ProjectTo<CategoryItemViewModel>(mapper.ConfigurationProvider)
                 .ToList();

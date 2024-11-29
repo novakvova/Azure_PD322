@@ -1,30 +1,27 @@
-import {useEffect, useState} from "react";
-import {ICategoryItem} from "./types.ts";
+// import {useEffect, useState} from "react";
+// import {ICategoryItem} from "./types.ts";
 import {API_URL, http_common} from "../../env";
 import {Link} from "react-router-dom";
 import {DeleteDialog} from "../common/DeleteDialog.tsx";
+// import {useGetPostsQuery} from "../../services/postApi.ts";
+import {useGetCategoriesQuery} from "../../services/categoryApi.ts";
+import Loader from "../common/Loader";
 
 const HomePage = () => {
-    const [list, setList] = useState<ICategoryItem[]>([]);
-
-    useEffect(() => {
-        http_common.get<ICategoryItem[]>("/api/categories")
-            .then(resp => {
-                //console.log("list", resp);
-                setList(resp.data);
-            });
-    }, []);
+    const {data: list, /*error,*/ isLoading} = useGetCategoriesQuery();
 
     const hamdleDelete = async (id: number) => {
         //console.log("Delete id", id);
         try {
             await http_common.delete("/api/categories/" + id);
-            setList(list.filter(item => item.id !== id));
+            //setList(list.filter(item => item.id !== id));
         } catch {
             //toast
         }
 
     }
+
+    if (isLoading) return <Loader loading={isLoading} size={150} color={"#1f2937"}/>;
 
     return (
         <>
@@ -36,7 +33,7 @@ const HomePage = () => {
                 </Link>
             </div>
             <div className='grid md:grid-cols-3 lg:grid-cols-4 gap-4'>
-                {list.map(item =>
+                {list?.map(item =>
                     <div
                         className="max-w-sm bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
                         <a href="#">
@@ -59,13 +56,13 @@ const HomePage = () => {
                                     </svg>
                                 </Link>
                             </div>
-                            </div>
                         </div>
-                        )}
                     </div>
+                )}
+            </div>
 
-                    </>
-                    );
-                }
+        </>
+    );
+}
 
 export default HomePage;
